@@ -2,6 +2,7 @@ const express= require("express");
 const cors=require("cors");
 const mysql=require("mysql")
 const app=express();
+const bodyParser=require("body-parser");
 const port= 4000;
 
 //quries
@@ -22,6 +23,10 @@ connection.connect((err)=>{
     else
     console.log("connected");
 })
+app.use(bodyParser.urlencoded({
+    extended:true
+}))
+app.use(bodyParser.json())
 
 //cors middleware
 app.use(cors())
@@ -40,8 +45,20 @@ app.get("/retreive",(req,res)=>{
     })
 })
 
-app.get("/add",(req,res)=>{
-    const{name,address,phonenumber}=req.query;
+// app.get("/add",(req,res)=>{
+//     const{name,address,phonenumber}=req.query;
+//     console.log(name,address,phonenumber);
+//     const INSERT=`insert into students(name,address,phonenumber) values("${name}","${address}","${phonenumber}")`
+//     connection.query(INSERT,(err,result)=>{
+//         if(err)
+//         console.log(err)
+//         else
+//         res.send("data added successfully")
+//     })
+// })
+
+app.post("/add",(req,res)=>{
+    const{name,address,phonenumber}=req.body;
     console.log(name,address,phonenumber);
     const INSERT=`insert into students(name,address,phonenumber) values("${name}","${address}","${phonenumber}")`
     connection.query(INSERT,(err,result)=>{
@@ -51,6 +68,7 @@ app.get("/add",(req,res)=>{
         res.send("data added successfully")
     })
 })
+
 
 app.listen(port,()=>{console.log("server is started")})
 
